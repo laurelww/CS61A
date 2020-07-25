@@ -157,6 +157,16 @@ does not return a value.
 """
 
 def prune(t):
+    """
+    >>> t = Tree(5, [Tree(2, [Tree(2), Tree(4)]), Tree(9), Tree(7, [Tree(6), Tree(1), Tree(8)])])
+    >>> prune(t)
+    >>> print(t)
+    5
+      9
+      7
+        6
+        1
+    """
     def prune_level(t, d):
         if ____________________:
             t.branches = ____________________
@@ -214,4 +224,4 @@ if __name__ == '__main__':
     doctest.testmod()
 
     # run doctests for a specific function by replacing func_name with the name of the func you want to test
-    # doctest.run_docstring_examples(repeater, globals(), verbose=True)
+    # doctest.run_docstring_examples(func_name, globals(), verbose=True)

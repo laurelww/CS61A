@@ -16,3 +16,8 @@ Recursion - Spring 2018 Final: Q5a
 7/24
 Iterators and Generators - Fall 2018 Final: Q6a
 Tree Recursion - Spring 2019 Final: Q3a
+Trees - Spring 2017 Final: Q4
+
+7/25
+Data abstraction - Spring 2019 MT2: Q5
+Nonlocal - Fall 2018 Final: Q4a
