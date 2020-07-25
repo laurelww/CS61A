@@ -1,0 +1,7 @@
+
+jpython:S1542š"JRename function "g" to match the regular expression ^[a-z_][a-z0-9_]{2,}$.(‚ĞÙş8°üœÈµ.
+Bpython:S1250"Remove this commented out code.(„²ÜÙüÿÿÿÿ8µÿ²°µ.
+opython:S1542"JRename function "g" to match the regular expression ^[a-z_][a-z0-9_]{2,}$.(ãÅåêüÿÿÿÿ8Å ÁÍµ.
+opython:S1542"JRename function "r" to match the regular expression ^[a-z_][a-z0-9_]{2,}$.(æûÿ‰ùÿÿÿÿ8Å ÁÍµ.
+npython:S1542X"JRename function "h" to match the regular expression ^[a-z_][a-z0-9_]{2,}$.(·…ŒÊúÿÿÿÿ8¶â™´µ.
+bpython:S3827"C______ is not defined. Change its name or define it before using it(ÇÉÙÓ8±«ğ¯µ.

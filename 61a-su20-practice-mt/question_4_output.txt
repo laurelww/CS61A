@@ -1,0 +1,217 @@
+Testing started at 10:22 PM ...
+
+
+
+
+
+
+**********************************************************************
+File "/Users//Desktop/cs61a/61a-su20-practice-mt/question_4/question_4.py", line 8, in sums
+Failed example:
+    sums(2, 2)
+Expected:
+    [[1, 1]]
+Got:
+    > --- New call sum(2, 2) ---
+    > Returned base case [[1, 1]] when k=n=2
+    [[1, 1]]
+
+
+
+
+
+
+**********************************************************************
+File "/Users//Desktop/cs61a/61a-su20-practice-mt/question_4/question_4.py", line 10, in sums
+Failed example:
+    sums(2, 3)
+Expected:
+    []
+Got:
+    > --- New call sum(2, 3) ---
+    > --- New call sum(1, 2) ---
+    > --- New call sum(0, 1) ---
+    > --- New call sum(0, 2) ---
+    []
+
+
+
+
+
+Failure
+<Click to see difference>
+
+**********************************************************************
+File "/Users//Desktop/cs61a/61a-su20-practice-mt/question_4/question_4.py", line 12, in sums
+Failed example:
+    sums(4, 2)
+Expected:
+    [[3, 1], [2, 2], [1, 3]]
+Got:
+    > --- New call sum(4, 2) ---
+    > --- New call sum(3, 1) ---
+    > --- New call sum(2, 0) ---
+    > --- New call sum(1, -1) ---
+    > --- New call sum(0, -2) ---
+    > --- New call sum(0, -1) ---
+    > --- New call sum(1, 0) ---
+    > --- New call sum(0, -1) ---
+    > --- New call sum(0, 0) ---
+    > Returned base case [[]] when k=n=0
+    > x=3 and s=[] in sumcall sum(3, 1)
+    > Cat [s + x] to get new sumlist [[3]]
+    > Extended y=[] by [[3]] to get y=[[3]]
+    
+    
+    > x=1 and s=[3] in sumcall sum(4, 2)
+    > Cat [s + x] to get new sumlist [[3, 1]]
+    > Extended y=[] by [[3, 1]] to get y=[[3, 1]]
+    
+    
+    > --- New call sum(2, 1) ---
+    > --- New call sum(1, 0) ---
+    > --- New call sum(0, -1) ---
+    > --- New call sum(0, 0) ---
+    > Returned base case [[]] when k=n=0
+    > x=2 and s=[] in sumcall sum(2, 1)
+    > Cat [s + x] to get new sumlist [[2]]
+    > Extended y=[] by [[2]] to get y=[[2]]
+    
+    
+    > x=2 and s=[2] in sumcall sum(4, 2)
+    > Cat [s + x] to get new sumlist [[2, 2]]
+    > Extended y=[[3, 1]] by [[2, 2]] to get y=[[3, 1], [2, 2]]
+    
+    
+    > --- New call sum(1, 1) ---
+    > Returned base case [[1]] when k=n=1
+    > x=3 and s=[1] in sumcall sum(4, 2)
+    > Cat [s + x] to get new sumlist [[1, 3]]
+    > Extended y=[[3, 1], [2, 2]] by [[1, 3]] to get y=[[3, 1], [2, 2], [1, 3]]
+    
+    
+    > --- New call sum(0, 1) ---
+    [[3, 1], [2, 2], [1, 3]]
+
+
+
+
+
+Failure
+<Click to see difference>
+
+**********************************************************************
+File "/Users//Desktop/cs61a/61a-su20-practice-mt/question_4/question_4.py", line 14, in sums
+Failed example:
+    sums(5, 3)
+Expected:
+    [[3, 1, 1], [2, 2, 1], [1, 3, 1], [2, 1, 2], [1, 2, 2], [1, 1, 3]]
+Got:
+    > --- New call sum(5, 3) ---
+    > --- New call sum(4, 2) ---
+    > --- New call sum(3, 1) ---
+    > --- New call sum(2, 0) ---
+    > --- New call sum(1, -1) ---
+    > --- New call sum(0, -2) ---
+    > --- New call sum(0, -1) ---
+    > --- New call sum(1, 0) ---
+    > --- New call sum(0, -1) ---
+    > --- New call sum(0, 0) ---
+    > Returned base case [[]] when k=n=0
+    > x=3 and s=[] in sumcall sum(3, 1)
+    > Cat [s + x] to get new sumlist [[3]]
+    > Extended y=[] by [[3]] to get y=[[3]]
+    
+    
+    > x=1 and s=[3] in sumcall sum(4, 2)
+    > Cat [s + x] to get new sumlist [[3, 1]]
+    > Extended y=[] by [[3, 1]] to get y=[[3, 1]]
+    
+    
+    > --- New call sum(2, 1) ---
+    > --- New call sum(1, 0) ---
+    > --- New call sum(0, -1) ---
+    > --- New call sum(0, 0) ---
+    > Returned base case [[]] when k=n=0
+    > x=2 and s=[] in sumcall sum(2, 1)
+    > Cat [s + x] to get new sumlist [[2]]
+    > Extended y=[] by [[2]] to get y=[[2]]
+    
+    
+    > x=2 and s=[2] in sumcall sum(4, 2)
+    > Cat [s + x] to get new sumlist [[2, 2]]
+    > Extended y=[[3, 1]] by [[2, 2]] to get y=[[3, 1], [2, 2]]
+    
+    
+    > --- New call sum(1, 1) ---
+    > Returned base case [[1]] when k=n=1
+    > x=3 and s=[1] in sumcall sum(4, 2)
+    > Cat [s + x] to get new sumlist [[1, 3]]
+    > Extended y=[[3, 1], [2, 2]] by [[1, 3]] to get y=[[3, 1], [2, 2], [1, 3]]
+    
+    
+    > --- New call sum(0, 1) ---
+    > x=1 and s=[3, 1] in sumcall sum(5, 3)
+    > Cat [s + x] to get new sumlist [[3, 1, 1]]
+    > Extended y=[] by [[3, 1, 1]] to get y=[[3, 1, 1]]
+    
+    
+    > x=1 and s=[2, 2] in sumcall sum(5, 3)
+    > Cat [s + x] to get new sumlist [[2, 2, 1]]
+    > Extended y=[[3, 1, 1]] by [[2, 2, 1]] to get y=[[3, 1, 1], [2, 2, 1]]
+    
+    
+    > x=1 and s=[1, 3] in sumcall sum(5, 3)
+    > Cat [s + x] to get new sumlist [[1, 3, 1]]
+    > Extended y=[[3, 1, 1], [2, 2, 1]] by [[1, 3, 1]] to get y=[[3, 1, 1], [2, 2, 1], [1, 3, 1]]
+    
+    
+    > --- New call sum(3, 2) ---
+    > --- New call sum(2, 1) ---
+    > --- New call sum(1, 0) ---
+    > --- New call sum(0, -1) ---
+    > --- New call sum(0, 0) ---
+    > Returned base case [[]] when k=n=0
+    > x=2 and s=[] in sumcall sum(2, 1)
+    > Cat [s + x] to get new sumlist [[2]]
+    > Extended y=[] by [[2]] to get y=[[2]]
+    
+    
+    > x=1 and s=[2] in sumcall sum(3, 2)
+    > Cat [s + x] to get new sumlist [[2, 1]]
+    > Extended y=[] by [[2, 1]] to get y=[[2, 1]]
+    
+    
+    > --- New call sum(1, 1) ---
+    > Returned base case [[1]] when k=n=1
+    > x=2 and s=[1] in sumcall sum(3, 2)
+    > Cat [s + x] to get new sumlist [[1, 2]]
+    > Extended y=[[2, 1]] by [[1, 2]] to get y=[[2, 1], [1, 2]]
+    
+    
+    > --- New call sum(0, 1) ---
+    > x=2 and s=[2, 1] in sumcall sum(5, 3)
+    > Cat [s + x] to get new sumlist [[2, 1, 2]]
+    > Extended y=[[3, 1, 1], [2, 2, 1], [1, 3, 1]] by [[2, 1, 2]] to get y=[[3, 1, 1], [2, 2, 1], [1, 3, 1], [2, 1, 2]]
+    
+    
+    > x=2 and s=[1, 2] in sumcall sum(5, 3)
+    > Cat [s + x] to get new sumlist [[1, 2, 2]]
+    > Extended y=[[3, 1, 1], [2, 2, 1], [1, 3, 1], [2, 1, 2]] by [[1, 2, 2]] to get y=[[3, 1, 1], [2, 2, 1], [1, 3, 1], [2, 1, 2], [1, 2, 2]]
+    
+    
+    > --- New call sum(2, 2) ---
+    > Returned base case [[1, 1]] when k=n=2
+    > x=3 and s=[1, 1] in sumcall sum(5, 3)
+    > Cat [s + x] to get new sumlist [[1, 1, 3]]
+    > Extended y=[[3, 1, 1], [2, 2, 1], [1, 3, 1], [2, 1, 2], [1, 2, 2]] by [[1, 1, 3]] to get y=[[3, 1, 1], [2, 2, 1], [1, 3, 1], [2, 1, 2], [1, 2, 2], [1, 1, 3]]
+    
+    
+    > --- New call sum(1, 2) ---
+    > --- New call sum(0, 1) ---
+    > --- New call sum(0, 2) ---
+    [[3, 1, 1], [2, 2, 1], [1, 3, 1], [2, 1, 2], [1, 2, 2], [1, 1, 3]]
+
+
+
+Process finished with exit code 0
