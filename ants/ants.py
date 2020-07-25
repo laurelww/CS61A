@@ -162,24 +162,25 @@ class ThrowerAnt(Ant):
     implemented = True
     damage = 1
     food_cost = 3
+    min_range = 0
+    max_range = float('inf')
     # ADD/OVERRIDE CLASS ATTRIBUTES HERE
 
-    def nearest_bee(self, beehive, min_range=0, max_range=float('inf')):
+    def nearest_bee(self, beehive, min_range=min_range, max_range=max_range):
         """Return the nearest Bee in a Place that is not the HIVE, connected to
         the ThrowerAnt's Place by following entrances.
 
         This method returns None if there is no such Bee (or none in range).
         """
         # BEGIN Problem 3 and 4
+        min_range = self.min_range
+        max_range = abs(self.max_range - min_range)
         curr_place = self.place
-        max_range = abs(max_range-min_range)
-
         while min_range > 0:
             if isinstance(curr_place, Hive):
                 return None
             curr_place = curr_place.entrance
             min_range -= 1
-
         while max_range >= 0:
             if isinstance(curr_place, Hive):
                 return None
@@ -187,7 +188,6 @@ class ThrowerAnt(Ant):
                 return rANTdom_else_none(curr_place.bees)
             curr_place = curr_place.entrance
             max_range -= 1
-
         return None
         # END Problem 3 and 4
 
@@ -218,11 +218,12 @@ class ShortThrower(ThrowerAnt):
     # OVERRIDE CLASS ATTRIBUTES HERE
     # BEGIN Problem 4
     implemented = True   # Change to True to view in the GUI
+    min_range = 0
     max_range = 3
 
-    def action(self, gamestate):
-        """Throw a leaf at the nearest Bee in range."""
-        self.throw_at(self.nearest_bee(gamestate.beehive, max_range=self.max_range))
+    # def action(self, gamestate):
+    #     """Throw a leaf at the nearest Bee in range."""
+    #     self.throw_at(self.nearest_bee(gamestate.beehive, max_range=self.max_range))
     # END Problem 4
 
 class LongThrower(ThrowerAnt):
@@ -236,9 +237,9 @@ class LongThrower(ThrowerAnt):
     min_range = 5
     max_range = float('inf')
 
-    def action(self, gamestate):
-        """Throw a leaf at the nearest Bee in range."""
-        self.throw_at(self.nearest_bee(gamestate.beehive, min_range=self.min_range))
+    # def action(self, gamestate):
+    #     """Throw a leaf at the nearest Bee in range."""
+    #     self.throw_at(self.nearest_bee(gamestate.beehive, min_range=self.min_range))
     # END Problem 4
 
 class FireAnt(Ant):
