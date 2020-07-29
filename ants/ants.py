@@ -507,7 +507,6 @@ class QueenAnt(ScubaThrower):  # You should change this line
         # END Problem 13
 
 
-
 class AntRemover(Ant):
     """Allows the player to remove ants from the board in the GUI."""
 
@@ -517,6 +516,7 @@ class AntRemover(Ant):
     def __init__(self):
         Ant.__init__(self, 0)
 
+
 class Bee(Insect):
     """A Bee moves from place to place, following exits and stinging ants."""
 
@@ -525,6 +525,11 @@ class Bee(Insect):
     is_watersafe = True
     # OVERRIDE CLASS ATTRIBUTES HERE
 
+    def __init__(self, armor, place=None):
+        Insect.__init__(self, armor, place)
+        self.statuses = []
+        self.direction = 1  # Forward by default
+        self.scared = False
 
     def sting(self, ant):
         """Attack an ANT, reducing its armor by 1."""
@@ -542,21 +547,72 @@ class Bee(Insect):
         return self.place.ant is not None and self.place.ant.blocks_path is True
         # END Problem 7
 
-    def action(self, gamestate):
+    def action_(self, gamestate):
         """A Bee's action stings the Ant that blocks its exit if it is blocked,
         or moves to the exit of its current place otherwise.
 
         gamestate -- The GameState, used to access game state information.
         """
-        destination = self.place.exit
+        print("DEBUG: STATS ", self.statuses)
         # Extra credit: Special handling for bee direction
+        destination = None
         # BEGIN EC
-        "*** YOUR CODE HERE ***"
+        if self.direction == -1:
+            destination = self.place.entrance
+        elif self.direction == 1:
+            destination = self.place.exit
         # END EC
         if self.blocked():
             self.sting(self.place.ant)
         elif self.armor > 0 and destination is not None:
             self.move_to(destination)
+
+
+    def action(self, gamestate):
+
+        def compose(n):
+            assert n > 0
+            if n == 1:
+                return lambda f: f
+            def call(f):
+                def on(arg, g):
+                    return compose(n - 1)(lambda x: f(arg, g(x)))
+                return on
+            return call
+
+        if self.statuses:
+            composed_func = compose(len(self.statuses))
+            for func in self.statuses:
+                composed_func = composed_func(func)
+            composed_func(gamestate)
+        else:
+            self.action_(gamestate)
+
+        # if self.statuses:
+        #     i = len(self.statuses)
+        #     composed_func = self.statuses[i - 1](gamestate, self.statuses[i])
+        #     i -= 2
+        #     while i:
+        #         composed_func = self.statuses[i](gamestate, composed_func)
+        #         i -= 1
+        #     composed_func
+        #
+        # else:
+        #     self.action_(gamestate)
+
+        # def composer(outer_func):
+        #     def func_adder(gamestate, inner_func):
+        #         return composer(lambda *args: outer_func(gamestate, inner_func(*args)))
+        #     return func, func_adder
+        #
+        # if self.statuses:
+        #     composed_func, func_adder = composer(self.statuses[0])
+        #     for stat in self.statuses[1:]:
+        #         composed_func, func_adder = func_adder(gamestate, stat)
+        #     composed_func(gamestate, self.action_)
+        # else:
+        #     self.action_(gamestate)
+
 
     def add_to(self, place):
         place.bees.append(self)
@@ -576,7 +632,18 @@ def make_slow(action, bee):
     action -- An action method of some Bee
     """
     # BEGIN Problem EC
-    "*** YOUR CODE HERE ***"
+    def new_slow_action(gamestate, action=action, turns_left=3):
+        if gamestate.time % 2 == 0 and turns_left > 0:
+            action(gamestate)
+        turns_left -= 1
+        if turns_left <= 0:
+            del bee.statuses[0]
+    return new_slow_action
+
+    # def slow_action(gamestate):
+    #     if gamestate.time % 2:
+    #         bee.action(gamestate)
+    #     return slow_action
     # END Problem EC
 
 def make_scare(action, bee):
@@ -585,13 +652,30 @@ def make_scare(action, bee):
     action -- An action method of some Bee
     """
     # BEGIN Problem EC
-    "*** YOUR CODE HERE ***"
+    def new_scare_action(gamestate, action=action, turns_left=2):
+        if bee.scared is False and turns_left > 0:
+            bee.direction = -1
+            action(gamestate)
+        turns_left -= 1
+        if turns_left <= 0 or bee.scared is True:
+            bee.direction = 1
+            bee.scared = True
+            del bee.statuses[0]
+
+    return new_scare_action
     # END Problem EC
 
 def apply_status(status, bee, length):
     """Apply a status to a BEE that lasts for LENGTH turns."""
     # BEGIN Problem EC
-    "*** YOUR CODE HERE ***"
+    turns_left = length
+    def applied_status(gamestate, *args, f=status):
+        nonlocal turns_left
+        f(gamestate, *args, turns_left=turns_left)
+        turns_left -= 1
+
+    bee.statuses.append(applied_status)
+
     # END Problem EC
 
 
@@ -601,12 +685,12 @@ class SlowThrower(ThrowerAnt):
     name = 'Slow'
     food_cost = 4
     # BEGIN Problem EC
-    implemented = False   # Change to True to view in the GUI
+    implemented = True   # Change to True to view in the GUI
     # END Problem EC
 
     def throw_at(self, target):
         if target:
-            apply_status(make_slow, target, 3)
+            apply_status(make_slow(target.action_, target), target, 3)
 
 
 class ScaryThrower(ThrowerAnt):
@@ -615,12 +699,13 @@ class ScaryThrower(ThrowerAnt):
     name = 'Scary'
     food_cost = 6
     # BEGIN Problem EC
-    implemented = False   # Change to True to view in the GUI
+    implemented = True   # Change to True to view in the GUI
     # END Problem EC
 
     def throw_at(self, target):
         # BEGIN Problem EC
-        "*** YOUR CODE HERE ***"
+        if target and not target.scared:
+            apply_status(make_scare(target.action_, target), target, 2)
         # END Problem EC
 
 class LaserAnt(ThrowerAnt):
