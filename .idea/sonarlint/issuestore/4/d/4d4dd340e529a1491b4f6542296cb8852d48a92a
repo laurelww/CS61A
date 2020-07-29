@@ -1,0 +1,5 @@
+
+vpython:S1226²"QIntroduce a new variable or use its initial value before reassigning 'max_range'.(’â‘ÿúÿÿÿÿ8ıÏ’Ï¸.
+vpython:S1226²"QIntroduce a new variable or use its initial value before reassigning 'min_range'.(’â‘ÿúÿÿÿÿ8ıÏ’Ï¸.
+python:S1542Ô"ZRename function "rANTdom_else_none" to match the regular expression ^[a-z_][a-z0-9_]{2,}$.(âÙ¦ğÿÿÿÿÿ8ıÏ’Ï¸.
+Jpython:S1481"%Remove the unused local variable "i".(€•ãøøÿÿÿÿ8Ûâ·¢¸.

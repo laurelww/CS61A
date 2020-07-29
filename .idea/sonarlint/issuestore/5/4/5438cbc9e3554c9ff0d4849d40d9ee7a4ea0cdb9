@@ -1,0 +1,5 @@
+
+Epython:S1481—"%Remove the unused local variable "b".(ѕыЬ“8ЃщМћё.
+jpython:S1542Ћ"JRename function "g" to match the regular expression ^[a-z_][a-z0-9_]{2,}$.(‚РЩю8ЃщМћё.
+Hpython:S5603Ћ"(Remove this unused function declaration.(‚РЩю8ЃщМћё.
+gpython:S930‘"IAdd 1 missing arguments; 'apply_to_nodes' expects 2 positional arguments.(З›·p8¦ђТћё.

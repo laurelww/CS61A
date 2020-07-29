@@ -21,8 +21,17 @@ def roll_dice(num_rolls, dice=six_sided):
     assert type(num_rolls) == int, 'num_rolls must be an integer.'
     assert num_rolls > 0, 'Must roll at least once.'
     # BEGIN PROBLEM 1
-    rolls = [dice() for _ in range(num_rolls)]
-    return 1 if 1 in rolls else sum(rolls)
+
+    sum_rolls = 0
+    got_a_one = 0
+    for _ in range(num_rolls):
+        roll = dice()
+        if roll == 1:
+            got_a_one = 1  # doubles as True and 1
+        sum_rolls += roll
+
+    return got_a_one or sum_rolls
+
     # END PROBLEM 1
 
 
@@ -123,7 +132,17 @@ def play(strategy0, strategy1, score0=0, score1=0, dice=six_sided,
         num_rolls = strategy[who](curr_score[who], curr_score[other(who)])
 
         # Take a turn to get results of dice rolls, keep it in record for Feral Hogs
+
+        # I think that the mild redundancy is worth the convenience of using a list
+        #    to store past scores because I need the opposite player's score from
+        #    the last turn in order to calculate Feral Hogs. I could split them
+        #    into two variables, one being the single score history and the other
+        #    the FH score, but the logic would become more cluttered, I think.
+        # Please let me know if I am missing a way I could simplify it while not
+        #     keeping a redundant record -- I am having trouble thinking of one.
+        #     Thank you!
         score_history.append(take_turn(num_rolls, curr_score[other(who)], dice))
+
 
         # Add gain to current player's score
         curr_score[who] += score_history[-1]
@@ -137,15 +156,29 @@ def play(strategy0, strategy1, score0=0, score1=0, dice=six_sided,
         if is_swap(curr_score[who], curr_score[other(who)]):
             curr_score[who], curr_score[other(who)] = curr_score[other(who)], curr_score[who]
 
-        # Return the updated list of scores, announce the current scores,
-        #     and indicate the next player's turn
-        return curr_score, say(curr_score[0], curr_score[1]), other(who)
+        # Return the updated list of scores
+        return curr_score
 
     while max(curr_score[0], curr_score[1]) < goal:
-        # Continue to update the list of scores,
-        #    renew the say function, and alternate players
-        #    until one player hits or surpasses the goal
-        curr_score, say, who = player_turn(curr_score)
+        # Done when one player hits or surpasses the goal
+
+        # Get new scores by taking a turn
+        curr_score = player_turn(curr_score)
+
+        # Switch players
+        who = other(who)
+
+        # Make score announcements and get new say function for next turn
+        say = say(curr_score[0], curr_score[1])
+    # Hi Wendy, thanks for your feedback on this part!
+    # I am having trouble deciding which comments are
+    # redundant and which are not. When I try to imagine
+    # the perspective of someone who doesn't know my code,
+    # I (personally) feel like these comments are nice
+    # because I don't have to implicitly figure out
+    # what player_turn and say return. If you could explain
+    # a little more about how to decide what is redundant and
+    # what isn't, that would be great.
 
     return curr_score[0], curr_score[1]
 
@@ -313,18 +346,18 @@ def max_scoring_num_rolls(dice=six_sided, trials_count=1000):
     1
     """
     # BEGIN PROBLEM 9
-    last_average = [0]
+    max_average, num_rolls_max_avg = 0, None
     averaged_dice = make_averaged(roll_dice, trials_count)
 
-    for x in range(1, 11):
+    for num_rolls in range(1, 11):
         # Cycle through average scores of groups of dice rolls from size 1 to 10
-        curr_average = averaged_dice(x, dice)
+        curr_average = averaged_dice(num_rolls, dice)
 
         # Update when a new highest average is found
-        if curr_average > last_average[0]:
-            last_average = [curr_average, x]
+        if curr_average > max_average:
+            max_average, num_rolls_max_avg = curr_average, num_rolls
 
-    return last_average[1]
+    return num_rolls_max_avg
     # END PROBLEM 9
 
 
