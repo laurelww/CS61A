@@ -21,3 +21,15 @@ Trees - Spring 2017 Final: Q4
 7/25
 Data abstraction - Spring 2019 MT2: Q5
 Nonlocal - Fall 2018 Final: Q4a
+
+7/27
+MISSED
+
+7/29
+Scheme - Fall 2019 Final: Q7a
+Linked Lists - Fall 2019 Final: Q6e
+HOF - Summer 2018 Final: Q5b
+Recursion - Fall 2018 Final: Q3c
+
+
+

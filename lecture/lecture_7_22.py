@@ -70,10 +70,10 @@ def add(s, v):
     #     larger_than = Link(v, [larger_than])
     #
     # return s
-    assert s is not List.empty
+    assert s is not Link.empty
     if s.first > v:
         s.first, s.rest = v, Link(s.first, s.rest)
-    elif s.first < v and empty(s.rest):
+    elif s.first < v and s.rest is Link.empty:
         s.rest = Link(v)
     elif s.first < v:
         return add(s.rest, v)

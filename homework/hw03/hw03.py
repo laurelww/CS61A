@@ -23,7 +23,7 @@ def composer(func=lambda x: x):
         return composer(lambda n: func(f(n)))  # func(f) is the new func
     return func, func_adder
 
-    lambda func: lambda f: lambda n: func(f(n))
+    # lambda func: lambda f: lambda n: func(f(n))
 
 
 def g(n):
