@@ -93,7 +93,6 @@ class Insect:
     def remove_from(self, place):
         self.place = None
 
-
     def __repr__(self):
         cname = type(self).__name__
         return '{0}({1}, {2})'.format(cname, self.armor, self.place)
@@ -122,10 +121,9 @@ class Ant(Insect):
         assert False, "{0} cannot contain an ant".format(self)
 
     def add_to(self, place):
-        # BEGIN Problem 9
-        # no ant in place
         if place.ant is None:
             place.ant = self
+        # BEGIN Problem 9
         # container already in place
         elif isinstance(place.ant, ContainerAnt) and place.ant.can_contain(self):
             place.ant.contain_ant(self)
@@ -135,8 +133,8 @@ class Ant(Insect):
             place.ant = self
         else:
             assert place.ant is None, 'Two ants in {0}'.format(place)
-        Insect.add_to(self, place)
         # END PROBLEM 9
+        Insect.add_to(self, place)
 
     def remove_from(self, place):
         if place.ant is self:
@@ -177,7 +175,7 @@ class ThrowerAnt(Ant):
     max_range = float('inf')
     # ADD/OVERRIDE CLASS ATTRIBUTES HERE
 
-    def nearest_bee(self, beehive, min_range=min_range, max_range=max_range):
+    def nearest_bee(self, beehive):
         """Return the nearest Bee in a Place that is not the HIVE, connected to
         the ThrowerAnt's Place by following entrances.
 
@@ -187,11 +185,15 @@ class ThrowerAnt(Ant):
         min_range = self.min_range
         max_range = abs(self.max_range - min_range)
         curr_place = self.place
+
+        # Start from the minimum location
         while min_range > 0:
             if isinstance(curr_place, Hive):
                 return None
             curr_place = curr_place.entrance
             min_range -= 1
+
+        # Move to the maximum location at most
         while max_range >= 0:
             if isinstance(curr_place, Hive):
                 return None
@@ -199,6 +201,7 @@ class ThrowerAnt(Ant):
                 return rANTdom_else_none(curr_place.bees)
             curr_place = curr_place.entrance
             max_range -= 1
+
         return None
         # END Problem 3 and 4
 
@@ -231,10 +234,6 @@ class ShortThrower(ThrowerAnt):
     implemented = True   # Change to True to view in the GUI
     min_range = 0
     max_range = 3
-
-    # def action(self, gamestate):
-    #     """Throw a leaf at the nearest Bee in range."""
-    #     self.throw_at(self.nearest_bee(gamestate.beehive, max_range=self.max_range))
     # END Problem 4
 
 class LongThrower(ThrowerAnt):
@@ -247,10 +246,6 @@ class LongThrower(ThrowerAnt):
     implemented = True   # Change to True to view in the GUI
     min_range = 5
     max_range = float('inf')
-
-    # def action(self, gamestate):
-    #     """Throw a leaf at the nearest Bee in range."""
-    #     self.throw_at(self.nearest_bee(gamestate.beehive, min_range=self.min_range))
     # END Problem 4
 
 class FireAnt(Ant):
@@ -276,13 +271,14 @@ class FireAnt(Ant):
         if the fire ant dies.
         """
         # BEGIN Problem 5
-        bee_damage = amount
+        damage_done_to_bee = amount
         if amount >= self.armor:
-            bee_damage += self.damage
+            damage_done_to_bee += self.damage
 
+        # Reduce the armor of all bees in the same place as the ant when harmed
         bees_in_place = self.place.bees[:]
         for bee in bees_in_place:
-            Insect.reduce_armor(bee, bee_damage)
+            Insect.reduce_armor(bee, damage_done_to_bee)
 
         Ant.reduce_armor(self, amount)
         if self.armor <= 0:
@@ -327,9 +323,9 @@ class NinjaAnt(Ant):
     name = 'Ninja'
     damage = 1
     food_cost = 5
-    blocks_path = False
     # OVERRIDE CLASS ATTRIBUTES HERE
     # BEGIN Problem 7
+    blocks_path = False
     implemented = True   # Change to True to view in the GUI
     # END Problem 7
 
@@ -342,16 +338,14 @@ class NinjaAnt(Ant):
 
 # BEGIN Problem 8
 # The WallAnt class
-
 class WallAnt(Ant):
 
-    name = "Wall"
+    name = 'Wall'
     implemented = True
     food_cost = 4
 
-    def __init__(self, armor = 4):
+    def __init__(self, armor=4):
         Ant.__init__(self, armor)
-
 # END Problem 8
 
 class ContainerAnt(Ant):
@@ -440,8 +434,7 @@ class Water(Place):
 # BEGIN Problem 12
 class ScubaThrower(ThrowerAnt):
     name = 'Scuba'
-    # implemented = True
-    # is this necessary?
+    implemented = True
     food_cost = 6
     is_watersafe = True
 # END Problem 12
@@ -453,11 +446,10 @@ class QueenAnt(ScubaThrower):  # You should change this line
 
     name = 'Queen'
     food_cost = 7
-    all_queens = []
-    implemented = True  # Change to True to view in the GUI
     # OVERRIDE CLASS ATTRIBUTES HERE
     # BEGIN Problem 13
-
+    all_queens = []
+    implemented = True  # Change to True to view in the GUI
     # END Problem 13
 
     def __init__(self, armor=1):
@@ -474,21 +466,25 @@ class QueenAnt(ScubaThrower):  # You should change this line
         Impostor queens do only one thing: reduce their own armor to 0.
         """
         # BEGIN Problem 13
-        if not self.is_original_queen:
+        if not self.is_original_queen: # kill impostors
             self.reduce_armor(self.armor)
         else:
             ScubaThrower.action(self, gamestate)
 
             curr_place = self.place.exit
             while curr_place:
-                ants_in_place = [curr_place.ant]
+                ants_in_place = [curr_place.ant] if curr_place.ant else []
+
+                # Account for multiple ants in the same place (containers and contained ants)
                 if isinstance(curr_place.ant, ContainerAnt) and curr_place.ant.contained_ant:
                     ants_in_place.append(curr_place.ant.contained_ant)
-                if ants_in_place and None not in ants_in_place:
+
+                if ants_in_place:
                     for ant in ants_in_place:
                         if ant.damage_has_been_doubled is False:
                             ant.damage *= 2
-                            ant.damage_has_been_doubled = True
+                            ant.damage_has_been_doubled = True  # Prevent ant damage from being doubled next time
+
                 curr_place = curr_place.exit
         # END Problem 13
 
@@ -500,11 +496,12 @@ class QueenAnt(ScubaThrower):  # You should change this line
         Insect.reduce_armor(self, amount)
         if self.armor <= 0 and self.is_original_queen:
             bees_win()
+        # END Problem 13
 
     def remove_from(self, place):
         if not self.is_original_queen:
             Ant.remove_from(self, place)
-        # END Problem 13
+
 
 
 class AntRemover(Ant):
@@ -527,7 +524,6 @@ class Bee(Insect):
 
     def __init__(self, armor, place=None):
         Insect.__init__(self, armor, place)
-        self.statuses = []
         self.direction = 1  # Forward by default
         self.scared = False
 
@@ -547,72 +543,25 @@ class Bee(Insect):
         return self.place.ant is not None and self.place.ant.blocks_path is True
         # END Problem 7
 
-    def action_(self, gamestate):
+    def action(self, gamestate):
         """A Bee's action stings the Ant that blocks its exit if it is blocked,
         or moves to the exit of its current place otherwise.
 
         gamestate -- The GameState, used to access game state information.
         """
-        print("DEBUG: STATS ", self.statuses)
         # Extra credit: Special handling for bee direction
-        destination = None
+        destination = self.place.exit
         # BEGIN EC
         if self.direction == -1:
-            destination = self.place.entrance
-        elif self.direction == 1:
-            destination = self.place.exit
+            if self.place.entrance == gamestate.beehive:
+                destination = self.place
+            else:
+                destination = self.place.entrance
         # END EC
         if self.blocked():
             self.sting(self.place.ant)
         elif self.armor > 0 and destination is not None:
             self.move_to(destination)
-
-
-    def action(self, gamestate):
-
-        def compose(n):
-            assert n > 0
-            if n == 1:
-                return lambda f: f
-            def call(f):
-                def on(arg, g):
-                    return compose(n - 1)(lambda x: f(arg, g(x)))
-                return on
-            return call
-
-        if self.statuses:
-            composed_func = compose(len(self.statuses))
-            for func in self.statuses:
-                composed_func = composed_func(func)
-            composed_func(gamestate)
-        else:
-            self.action_(gamestate)
-
-        # if self.statuses:
-        #     i = len(self.statuses)
-        #     composed_func = self.statuses[i - 1](gamestate, self.statuses[i])
-        #     i -= 2
-        #     while i:
-        #         composed_func = self.statuses[i](gamestate, composed_func)
-        #         i -= 1
-        #     composed_func
-        #
-        # else:
-        #     self.action_(gamestate)
-
-        # def composer(outer_func):
-        #     def func_adder(gamestate, inner_func):
-        #         return composer(lambda *args: outer_func(gamestate, inner_func(*args)))
-        #     return func, func_adder
-        #
-        # if self.statuses:
-        #     composed_func, func_adder = composer(self.statuses[0])
-        #     for stat in self.statuses[1:]:
-        #         composed_func, func_adder = func_adder(gamestate, stat)
-        #     composed_func(gamestate, self.action_)
-        # else:
-        #     self.action_(gamestate)
-
 
     def add_to(self, place):
         place.bees.append(self)
@@ -632,18 +581,11 @@ def make_slow(action, bee):
     action -- An action method of some Bee
     """
     # BEGIN Problem EC
-    def new_slow_action(gamestate, action=action, turns_left=3):
-        if gamestate.time % 2 == 0 and turns_left > 0:
+    def slow_action(gamestate):
+        if gamestate.time % 2 == 0:
             action(gamestate)
-        turns_left -= 1
-        if turns_left <= 0:
-            del bee.statuses[0]
-    return new_slow_action
 
-    # def slow_action(gamestate):
-    #     if gamestate.time % 2:
-    #         bee.action(gamestate)
-    #     return slow_action
+    return slow_action
     # END Problem EC
 
 def make_scare(action, bee):
@@ -652,30 +594,29 @@ def make_scare(action, bee):
     action -- An action method of some Bee
     """
     # BEGIN Problem EC
-    def new_scare_action(gamestate, action=action, turns_left=2):
-        if bee.scared is False and turns_left > 0:
-            bee.direction = -1
-            action(gamestate)
-        turns_left -= 1
-        if turns_left <= 0 or bee.scared is True:
-            bee.direction = 1
-            bee.scared = True
-            del bee.statuses[0]
+    def scare_action(gamestate):
+        bee.direction = -1
+        action(gamestate)
+        bee.direction = 1
 
-    return new_scare_action
+    return scare_action
     # END Problem EC
 
 def apply_status(status, bee, length):
     """Apply a status to a BEE that lasts for LENGTH turns."""
     # BEGIN Problem EC
-    turns_left = length
-    def applied_status(gamestate, *args, f=status):
-        nonlocal turns_left
-        f(gamestate, *args, turns_left=turns_left)
-        turns_left -= 1
+    original_action = bee.action
+    next_status = status(original_action, bee)
 
-    bee.statuses.append(applied_status)
+    def status_action(gamestate):
+        nonlocal length
+        if length > 0:
+            next_status(gamestate)
+            length -= 1
+        else:
+            original_action(gamestate)
 
+    bee.action = status_action
     # END Problem EC
 
 
@@ -690,7 +631,7 @@ class SlowThrower(ThrowerAnt):
 
     def throw_at(self, target):
         if target:
-            apply_status(make_slow(target.action_, target), target, 3)
+            apply_status(make_slow, target, 3)
 
 
 class ScaryThrower(ThrowerAnt):
@@ -704,8 +645,9 @@ class ScaryThrower(ThrowerAnt):
 
     def throw_at(self, target):
         # BEGIN Problem EC
-        if target and not target.scared:
-            apply_status(make_scare(target.action_, target), target, 2)
+        if target and target.scared is False:
+            apply_status(make_scare, target, 2)
+            target.scared = True
         # END Problem EC
 
 class LaserAnt(ThrowerAnt):
