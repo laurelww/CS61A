@@ -120,3 +120,17 @@ G
 lecture/lecture_7_22.py,4/7/472f7736ddaa596313dcf3bb57d78b4117099ef2
 <
 ants/ants.py,4/d/4d4dd340e529a1491b4f6542296cb8852d48a92a
+D
+ants/scratch_file.py,1/5/1555f8a1ffa05de3177609abb1d612ccf52b6db6
+U
+%study-group/problems_7_29_skeleton.py,5/3/53c660f7be6fcf2bd9df023c400033fb7cbaf4ae
+B
+lab/lab10/lab10.ok,2/1/21362e66ea9ba1b9958e9c024b88a558625debf5
+E
+homework/hw06/hw06.py,1/e/1e6b685a7720d7eff3f76bfc68428660b380c6e4
+E
+homework/hw05/hw05.py,7/1/71d9d278cd02b2da8e55ad080e513c5f9fa1eb2b
+C
+lab/lab10/lab10.scm,d/b/db8bdf8f2f8f6f7fb438a413d5af1b0bfda71eaf
+B
+schemin/proj01.scm,3/9/3998398e8b6a8073f19222ae893a27d4642cd5bc

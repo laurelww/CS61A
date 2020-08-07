@@ -60,18 +60,18 @@ class CreditCard:
         price of the next purchase that would not be declined.
         """
         assert price > 0
-        if ______:
+        if self.balance + price > self.maximum:
             return 'declined'
-        ______
-        return ______
+        self.balance += price
+        return self.maximum - self.balance
 
     def pay_bill(self):
         """Reduce the balance to 0 and return the value of the balance before
         it was reset to 0.
         """
-        ______
-        ______
-        return ______
+        balance = self.balance
+        self.balance = 0
+        return balance
 
     def __repr__(self):
         return 'CreditCard(' + repr(self.maximum) + ', ' + repr(self.balance) + ')'
@@ -188,8 +188,8 @@ def order(redwood):
     True
     """
     plucking_order = []
-    for b in ______:
-        ______
+    for b in redwood.branches:
+        plucking_order += order(b)
     return plucking_order + [redwood.label]
 
 
@@ -271,10 +271,11 @@ def compose(n):
     """
     assert n > 0
     if n == 1:
-        return ____________________
+        return lambda f: f
+
     def call(f):
         def on(g):
-            return ____________________(____________________)
+            return compose(n - 1)(lambda x: f(g(x)))
         return on
     return call
 
@@ -311,8 +312,7 @@ from operator import add
 c = lambda f: lambda x: lambda y: f(x, y)
 twice = lambda z: 2 * z
 
-compose(___________)(twice)(___________(___________)(10))(___________(pow)(10))(___________)
-
+compose(3)(twice)(c(add)(10))(c(pow)(10))(3)
 
 # Original skeleton
 # from operator import add
@@ -320,3 +320,12 @@ compose(___________)(twice)(___________(___________)(10))(___________(pow)(10))(
 # twice = lambda z: 2 * z
 #
 # compose(___________)(twice)(___________(___________)(10))(___________(pow)(10))(___________)
+
+if __name__ == '__main__':
+    import doctest
+
+    # uncomment to test all funcs
+    # doctest.testmod()
+
+    # run doctests for a specific function by replacing func_name with the name of the func you want to test
+    doctest.run_docstring_examples(compose, globals(), verbose=False)

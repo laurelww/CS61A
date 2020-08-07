@@ -1,3 +1,18 @@
+Schedule of topics:
+
+Mon
+Tail Recursion/OOP/Lists/Lambdas/Control
+
+Wed
+Scheme/Linked Lists/HOF/Recursion/Macros (next week)
+
+Friday
+Scheme Lists/Iterators and Generators/Tree Recursion/Trees
+
+Sat
+Interpreters/Data Abstraction/Nonlocal/Streams/SQL
+
+
 Problems in stock:
 Lists - Fall 2016 Final: Q4(a)
 
@@ -31,5 +46,37 @@ Linked Lists - Fall 2019 Final: Q6e
 HOF - Summer 2018 Final: Q5b
 Recursion - Fall 2018 Final: Q3c
 
+7/30 - MAKEUP for 7/27
+OOP - Spring 2020 MT2: Q3b
+Lists - Spring 2020 MT2: Q1a
+Lambdas - Spring 2020 MT1: Q4a
+Control - Spring 2020 MT1: Q4b
+
+7/31
+Scheme Lists
+Iterators and Generators - Spring 2018 Mock MT2: Q4
+Tree Recursion - Summer 2015 MT1: Q3d
+Trees -
 
 
+8/1
+MISSED
+
+
+8/3
+Tail Recursion - Summer 2015 Final: Q7a
+OOP - Summer 2015 Final: Q5
+Lists - Summer 2015 Final: Q8a
+
+8/5
+Scheme - Summer 2018 Mock Final: Q5a
+Linked Lists - Spring 2018 Mock Final: Q2
+HOF - Summer 2019 MT: Q6
+Recursion - Fall 2019 Final: Q7c
+Macros - Summer 2018 Final: Q8
+
+8/6 - MAKEUP for 7/1 (sat)
+Interpreters - Spring 2019 Final: Q10
+Data Abstraction - Summer 2018 Final: Q5
+Nonlocal - Summer 2019 Final: Q3
+Streams - Fall 2016 Final: Q5b

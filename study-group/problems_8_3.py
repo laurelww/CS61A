@@ -96,9 +96,9 @@ class Network:
 
     def add_friend(self, user1, user2):
         if user1 not in self.friends:
-            self.friends[user1] = [user2]
+            self.friends[user1] = []
         if user2 not in self.friends:
-            self.friends[user2] = [user1]
+            self.friends[user2] = []
         self.friends[user1] += [user2]
         self.friends[user2] += [user1]
 
