@@ -35,10 +35,15 @@ def scheme_eval(expr, env, _=None): # Optional third argument is ignored
         return SPECIAL_FORMS[first](rest, env)
     else:
         # BEGIN PROBLEM 4
-        evaled_operator = scheme_eval(expr.first, env)
-        validate_procedure(evaled_operator)
-        evaled_operands = expr.rest.map(lambda x: scheme_eval(x, env))
-        return scheme_apply(evaled_operator, evaled_operands, env)
+        "*** YOUR CODE HERE ***"
+        operator = scheme_eval(expr.first, env)
+        validate_procedure(operator)
+        if isinstance(operator, MacroProcedure):
+            foo = operator.apply_macro(expr.rest, env)
+            return scheme_eval(foo, env)
+        else:
+            arguments = expr.rest.map(lambda a: scheme_eval(a, env))
+        return scheme_apply(operator, arguments, env)
         # END PROBLEM 4
 
 def self_evaluating(expr):
@@ -71,12 +76,17 @@ def eval_all(expressions, env):
     2
     """
     # BEGIN PROBLEM 7
-    curr_result = None
-    while expressions:
-        curr_result = scheme_eval(expressions.first, env)
+    while expressions and expressions.rest:
+        scheme_eval(expressions.first, env)
         expressions = expressions.rest
-    return curr_result
-    # return scheme_eval(expressions.first, env) # change this line
+
+    if expressions:
+        return scheme_eval(expressions.first, env, True)
+    # curr_result = None
+    # while expressions:
+    #     curr_result = scheme_eval(expressions.first, env, tail)
+    #     expressions = expressions.rest
+    # return curr_result
     # END PROBLEM 7
 
 ################
@@ -301,6 +311,8 @@ def do_begin_form(expressions, env):
     """
     validate_form(expressions, 1)
     return eval_all(expressions, env)
+    # validate_form(expressions, 1)
+    # return eval_all(expressions, env)
 
 def do_lambda_form(expressions, env):
     """Evaluate a lambda form.
@@ -315,7 +327,6 @@ def do_lambda_form(expressions, env):
     # BEGIN PROBLEM 8
     body = expressions.rest
     return LambdaProcedure(formals, body, env)
-    # (self, formals, body, env):
     # END PROBLEM 8
 
 def do_if_form(expressions, env):
@@ -329,9 +340,9 @@ def do_if_form(expressions, env):
     """
     validate_form(expressions, 2, 3)
     if is_true_primitive(scheme_eval(expressions.first, env)):
-        return scheme_eval(expressions.rest.first, env)
+        return scheme_eval(expressions.rest.first, env, True)
     elif len(expressions) == 3:
-        return scheme_eval(expressions.rest.rest.first, env)
+        return scheme_eval(expressions.rest.rest.first, env, True)
 
 def do_and_form(expressions, env):
     """Evaluate a (short-circuited) and form.
@@ -347,20 +358,26 @@ def do_and_form(expressions, env):
     False
     """
     # BEGIN PROBLEM 12
-    true_value = 0
+    # if expressions is nil:
+    #     return True
+    # if expressions.rest is nil:
+    #     return scheme_eval(expressions.first, env, True)
+    # if scheme_eval(expressions.first, env) is False:
+    #     return False
+    # return do_and_form(expressions.rest, env)
+
 
     if not expressions:
         return True
 
-    last_true_val = False
-    while expressions:
+    while expressions.rest:
         curr_val = scheme_eval(expressions.first, env)
         if curr_val is False and is_false_primitive(curr_val):
             return False
         expressions = expressions.rest
-        last_true_val = curr_val
 
-    return last_true_val
+    return scheme_eval(expressions.first, env, True)
+
     # END PROBLEM 12
 
 def do_or_form(expressions, env):
@@ -377,19 +394,30 @@ def do_or_form(expressions, env):
     6
     """
     # BEGIN PROBLEM 12
-    true_value = 0
+
+    # if expressions is nil:
+    #     return False
+    # if expressions.rest is nil:
+    #     return scheme_eval(expressions.first, env, True)
+    #
+    # result = scheme_eval(expressions.first, env)
+    # if result or is_true_primitive(result):
+    #     return result
+    # return do_or_form(expressions.rest, env)
 
     if not expressions:
         return False
 
-    curr_val = False
-    while expressions:
+    while expressions.rest:
         curr_val = scheme_eval(expressions.first, env)
         if curr_val or is_true_primitive(curr_val):
             return curr_val
         expressions = expressions.rest
 
-    return curr_val
+    curr_val = scheme_eval(expressions.first, env, True)
+    if curr_val or is_true_primitive(curr_val):
+        return curr_val
+    return False
     # END PROBLEM 12
 
 def do_cond_form(expressions, env):
@@ -458,6 +486,31 @@ def do_define_macro(expressions, env):
     """
     # BEGIN Problem 20
     "*** YOUR CODE HERE ***"
+    validate_form(expressions,
+                  2)  # Checks that expressions is a list of length at least 2
+    target = expressions.first
+
+    if scheme_symbolp(target):
+        # Checks that expressions is a list of length exactly 2
+        validate_form(expressions, 2, 2)
+        # BEGIN PROBLEM 5
+        "*** YOUR CODE HERE ***"
+        env.define(target, scheme_eval(expressions.rest.first, env))
+        return target
+        # END PROBLEM 5
+    elif isinstance(target, Pair) and scheme_symbolp(target.first):
+        # BEGIN PROBLEM 9
+        "*** YOUR CODE HERE ***"
+        var_name = target.first
+        formals = target.rest
+        body = expressions.rest
+        validate_formals(formals)
+        env.define(var_name, MacroProcedure(formals, body, env))
+        return var_name
+        # END PROBLEM 9
+    else:
+        bad_target = target.first if isinstance(target, Pair) else target
+        raise SchemeError('non-symbol: {0}'.format(bad_target))
     # END Problem 20
 
 
@@ -658,7 +711,9 @@ def optimize_tail_calls(prior_eval_function):
 
         result = Thunk(expr, env)
         # BEGIN
-        "*** YOUR CODE HERE ***"
+        while isinstance(result, Thunk):
+            result = prior_eval_function(result.expr, result.env, tail)
+        return result
         # END
     return optimized_eval
 
@@ -670,7 +725,7 @@ def optimize_tail_calls(prior_eval_function):
 ################################################################
 # Uncomment the following line to apply tail call optimization #
 ################################################################
-# scheme_eval = optimize_tail_calls(scheme_eval)
+scheme_eval = optimize_tail_calls(scheme_eval)
 
 
 
